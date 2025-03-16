@@ -1,11 +1,21 @@
-const { addNewEtymology, getAllEtymology, deleteEtymologyById, updateEtymologyById, getEtymologyById } = require("../controller/etymology.controller")
+const {
+  addNewEtymology,
+  getAllEtymology,
+  deleteEtymologyById,
+  updateEtymologyById,
+  getEtymologyById,
+} = require("../controller/etymology.controller");
 
-const router=require("express").Router()
+const userAdminGuard = require("../middleware/guards/user.admin.guard");
+const userGuard = require("../middleware/guards/user.guard");
+const userSelfGuard = require("../middleware/guards/user.self.guard");
 
-router.post("/", addNewEtymology)
-router.get("/", getAllEtymology)
-router.delete("/:id", deleteEtymologyById)
-router.put("/:id", updateEtymologyById)
-router.get("/:id", getEtymologyById)
+const router = require("express").Router();
 
-module.exports = router
+router.post("/", userGuard, addNewEtymology);
+router.get("/", userAdminGuard, getAllEtymology);
+router.get("/:id", userGuard, getEtymologyById);
+router.put("/:id", [userSelfGuard, userAdminGuard], updateEtymologyById);
+router.delete("/:id", userAdminGuard, deleteEtymologyById);
+
+module.exports = router;

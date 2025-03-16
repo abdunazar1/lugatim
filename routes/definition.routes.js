@@ -1,11 +1,20 @@
-const { addNewDefinition, getAllDefinition, deleteDefinitionById, updateDefinitionById, getDefinitionById } = require("../controller/definition.controller")
+const {
+  addNewDefinition,
+  getAllDefinition,
+  deleteDefinitionById,
+  updateDefinitionById,
+  getDefinitionById,
+} = require("../controller/definition.controller");
+const userAdminGuard = require("../middleware/guards/user.admin.guard");
+const userGuard = require("../middleware/guards/user.guard");
+const userSelfGuard = require("../middleware/guards/user.self.guard");
 
-const router=require("express").Router()
+const router = require("express").Router();
 
-router.post("/", addNewDefinition)
-router.get("/", getAllDefinition)
-router.delete("/:id", deleteDefinitionById)
-router.put("/:id", updateDefinitionById)
-router.get("/:id", getDefinitionById)
+router.post("/", userGuard, addNewDefinition);
+router.get("/", userAdminGuard, getAllDefinition);
+router.delete("/:id", userSelfGuard, deleteDefinitionById);
+router.put("/:id", userAdminGuard, updateDefinitionById);
+router.get("/:id", getDefinitionById);
 
-module.exports = router
+module.exports = router;

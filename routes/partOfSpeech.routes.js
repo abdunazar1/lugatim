@@ -1,11 +1,20 @@
-const { addNewPartOfSpeech, getAllPartOfSpeech, deletePartOfSpeechById, updatePartOfSpeechById, getPartOfSpeechById } = require("../controller/partOfSpeech.controller")
+const {
+  addNewPartOfSpeech,
+  getAllPartOfSpeech,
+  deletePartOfSpeechById,
+  updatePartOfSpeechById,
+  getPartOfSpeechById,
+} = require("../controller/partOfSpeech.controller");
 
-const router=require("express").Router()
+const userAdminGuard = require("../middleware/guards/user.admin.guard");
+const userGuard = require("../middleware/guards/user.guard");
 
-router.post("/", addNewPartOfSpeech)
-router.get("/", getAllPartOfSpeech)
-router.delete("/:id", deletePartOfSpeechById)
-router.put("/:id", updatePartOfSpeechById)
-router.get("/:id", getPartOfSpeechById)
+const router = require("express").Router();
 
-module.exports = router
+router.post("/", userAdminGuard, addNewPartOfSpeech);
+router.get("/", getAllPartOfSpeech);
+router.get("/:id", getPartOfSpeechById);
+router.put("/:id", userAdminGuard, updatePartOfSpeechById);
+router.delete("/:id", userAdminGuard, deletePartOfSpeechById);
+
+module.exports = router;

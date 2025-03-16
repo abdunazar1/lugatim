@@ -1,11 +1,20 @@
-const { addNewWord, getAllWord, deleteWordById, updateWordById, getWordById } = require("../controller/words.controller")
+const {
+  addNewWord,
+  getAllWord,
+  deleteWordById,
+  updateWordById,
+  getWordById,
+} = require("../controller/words.controller");
 
-const router=require("express").Router()
+const userAdminGuard = require("../middleware/guards/user.admin.guard");
+const userGuard = require("../middleware/guards/user.guard");
 
-router.post("/", addNewWord)
-router.get("/", getAllWord)
-router.delete("/:id",deleteWordById)
-router.put("/:id",updateWordById)
-router.get("/:id",getWordById)
+const router = require("express").Router();
 
-module.exports = router
+router.post("/", userAdminGuard, addNewWord);
+router.get("/", getAllWord);
+router.get("/:id", getWordById);
+router.put("/:id", userAdminGuard, updateWordById);
+router.delete("/:id", userAdminGuard, deleteWordById);
+
+module.exports = router;

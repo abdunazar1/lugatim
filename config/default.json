@@ -1,4 +1,6 @@
 {
   "port": 3001,
-  "dbUri": "mongodb://127.0.0.1:27017/lugatim"
+  "dbUri": "mongodb://127.0.0.1:27017/lugatim",
+  "tokenKey": "MyVeryVerySecretKey",
+  "tokenTime": 86400
 }

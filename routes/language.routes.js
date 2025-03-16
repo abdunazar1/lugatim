@@ -1,11 +1,20 @@
-const { addNewLanguage, getAllLanguage, deleteLanguageById, updateLanguageById, getLanguageById } = require("../controller/language.controller")
+const {
+  addNewLanguage,
+  getAllLanguage,
+  deleteLanguageById,
+  updateLanguageById,
+  getLanguageById,
+} = require("../controller/language.controller");
 
-const router=require("express").Router()
+const userAdminGuard = require("../middleware/guards/user.admin.guard");
+const userGuard = require("../middleware/guards/user.guard");
 
-router.post("/", addNewLanguage)
-router.get("/", getAllLanguage)
-router.delete("/:id", deleteLanguageById)
-router.put("/:id", updateLanguageById)
-router.get("/:id", getLanguageById)
+const router = require("express").Router();
 
-module.exports = router
+router.post("/", userAdminGuard, addNewLanguage);
+router.get("/", getAllLanguage);
+router.get("/:id", getLanguageById);
+router.put("/:id", userAdminGuard, updateLanguageById);
+router.delete("/:id", userAdminGuard, deleteLanguageById);
+
+module.exports = router;

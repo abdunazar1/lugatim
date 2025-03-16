@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const { errorHandler } = require("../helpers/error_handler");
 const Users = require("../schemas/Users");
-const Joi = require("joi");
 const { usersValidation } = require("../validations/users.validation");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 const bcrypt = require("bcrypt");
 
@@ -65,8 +66,17 @@ const loginUser = async (req, res) => {
     if (!validPassword) {
       return res.status(400).send({ message: "Email yoki password hato" });
     }
+    const payloat = {
+      is: user._id,
+      email: user.email,
+      role: user.role,
+    };
+
+    const token = jwt.sign(payloat, config.get("tokenKey"), {
+      expiresIn: config.get("tokenTime"),
+    });
     //avtorizatsiya
-    res.status(200).send({ message: "Tizimga xush kelibsiz" });
+    res.status(200).send({ message: "Tizimga xush kelibsiz", token });
   } catch (error) {
     errorHandler(error, res);
   }
@@ -75,7 +85,9 @@ const loginUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const user = await Users.find({});
-
+    if (!user) {
+      return res.status(400).send({ message: "User foydalanuvchi topilmadi" });
+    }
     res.status(201).send({ user });
   } catch (error) {
     errorHandler(error, res);
@@ -85,10 +97,10 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const id = req.params.id;
-    if (!mongoose.isValidObjectId(id)) {
-      return res.status(400).send({ error: "Incorrect ObjectId" });
-    }
     const user = await Users.findById(id);
+    if (!user) {
+      return res.status(400).send({ message: "foydalanuvchi topilmadi" });
+    }
     res.send({ user });
   } catch (error) {
     console.log(error);
